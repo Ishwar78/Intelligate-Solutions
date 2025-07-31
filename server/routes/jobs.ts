@@ -174,7 +174,7 @@ export const submitApplication: RequestHandler = async (req, res) => {
           <div style="background-color: #dbeafe; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
             <h4 style="color: #1e40af; margin: 0;">Position Applied For:</h4>
             <p style="margin: 5px 0 0 0; font-size: 18px; font-weight: bold;">${job.title}</p>
-            <p style="margin: 5px 0 0 0; color: #666;">📍 ${job.location} | 💼 ${job.industry} | ���� ${job.salary}</p>
+            <p style="margin: 5px 0 0 0; color: #666;">📍 ${job.location} | 💼 ${job.industry} | 💰 ${job.salary}</p>
           </div>
 
           <table style="width: 100%; border-collapse: collapse;">
@@ -288,12 +288,18 @@ export const submitApplication: RequestHandler = async (req, res) => {
       </div>
     `;
 
-    await transporter.sendMail({
-      from: '"Intelligate Solutions" <sharmaishwar970@gmail.com>',
-      to: email,
-      subject: `Application Received - ${job.title} at Intelligate Solutions`,
-      html: candidateEmailContent
-    });
+    try {
+      await transporter.sendMail({
+        from: '"Intelligate Solutions" <sharmaishwar970@gmail.com>',
+        to: email,
+        subject: `Application Received - ${job.title} at Intelligate Solutions`,
+        html: candidateEmailContent
+      });
+      console.log("Candidate email sent successfully");
+    } catch (emailError) {
+      console.error("Failed to send candidate email:", emailError);
+      // Continue with application submission even if email fails
+    }
 
     res.status(201).json({
       success: true,
