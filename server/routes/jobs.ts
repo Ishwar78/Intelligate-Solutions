@@ -355,13 +355,13 @@ export const adminLogin: RequestHandler = async (req, res) => {
 // Middleware to verify admin token
 export const verifyAdmin: RequestHandler = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  
+
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: "Access denied. No token provided." });
   }
-  
+
   const token = authHeader.substring(7);
-  
+
   try {
     // Simple token verification - in production, use JWT
     const decoded = Buffer.from(token, 'base64').toString();
@@ -372,5 +372,87 @@ export const verifyAdmin: RequestHandler = (req, res, next) => {
     }
   } catch (error) {
     res.status(401).json({ error: "Invalid token" });
+  }
+};
+
+// Get all categories
+export const getCategories: RequestHandler = async (req, res) => {
+  try {
+    const db = await connectToMongoDB();
+    const categories = await db.collection("job_categories").find({}).sort({ name: 1 }).toArray();
+    res.json(categories);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ error: "Failed to fetch categories" });
+  }
+};
+
+// Create new category (Admin only)
+export const createCategory: RequestHandler = async (req, res) => {
+  try {
+    const { name, description } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ error: "Category name is required" });
+    }
+
+    const db = await connectToMongoDB();
+
+    // Check if category already exists
+    const existingCategory = await db.collection("job_categories").findOne({
+      name: { $regex: new RegExp(`^${name}$`, 'i') }
+    });
+
+    if (existingCategory) {
+      return res.status(400).json({ error: "Category already exists" });
+    }
+
+    const newCategory = {
+      name: name.trim(),
+      description: description?.trim() || '',
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const result = await db.collection("job_categories").insertOne(newCategory);
+
+    res.status(201).json({
+      success: true,
+      categoryId: result.insertedId,
+      message: "Category created successfully"
+    });
+  } catch (error) {
+    console.error("Error creating category:", error);
+    res.status(500).json({ error: "Failed to create category" });
+  }
+};
+
+// Delete category (Admin only)
+export const deleteCategory: RequestHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const db = await connectToMongoDB();
+
+    // Check if any jobs are using this category
+    const jobsUsingCategory = await db.collection("job_openings").findOne({
+      industry: await db.collection("job_categories").findOne({ _id: new ObjectId(id) }).then(cat => cat?.name)
+    });
+
+    if (jobsUsingCategory) {
+      return res.status(400).json({ error: "Cannot delete category that is being used by jobs" });
+    }
+
+    const result = await db.collection("job_categories").deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    res.json({ success: true, message: "Category deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    res.status(500).json({ error: "Failed to delete category" });
   }
 };
