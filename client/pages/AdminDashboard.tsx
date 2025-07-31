@@ -98,24 +98,8 @@ export default function AdminDashboard() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Industry options for dropdown
-  const industryOptions = [
-    'Automotive',
-    'ITES & BPO',
-    'Pharmaceuticals',
-    'Manufacturing',
-    'Electrical',
-    'Energy',
-    'Real Estate',
-    'FMCG',
-    'Engineering',
-    'Banking & Finance',
-    'Healthcare',
-    'Education',
-    'Retail',
-    'Hospitality',
-    'Other'
-  ];
+  // Get industry options from database categories
+  const industryOptions = categories.filter(cat => cat.isActive).map(cat => cat.name);
 
   const jobTypeOptions = [
     'Full-time',
