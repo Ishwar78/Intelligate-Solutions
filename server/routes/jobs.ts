@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import { MongoClient, ObjectId } from "mongodb";
+import nodemailer from "nodemailer";
 
 const MONGODB_URI = "mongodb+srv://ai:Ai123@cluster0.fwwaouj.mongodb.net/";
 const DB_NAME = "intelligate_jobs";
