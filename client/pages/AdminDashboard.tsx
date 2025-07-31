@@ -464,6 +464,49 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
+        {/* Categories Management */}
+        <Card className="mb-8">
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle>Job Categories</CardTitle>
+                <CardDescription>Manage job categories and industries</CardDescription>
+              </div>
+              <Button onClick={() => setIsCategoryModalOpen(true)} className="bg-green-600 hover:bg-green-700">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Category
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {categories.map((category) => (
+                <div key={category._id} className="border rounded-lg p-4 flex justify-between items-start">
+                  <div>
+                    <h4 className="font-semibold text-gray-900">{category.name}</h4>
+                    {category.description && (
+                      <p className="text-sm text-gray-600 mt-1">{category.description}</p>
+                    )}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDeleteCategory(category._id)}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              {categories.length === 0 && (
+                <div className="col-span-full text-center py-8 text-gray-500">
+                  No categories found. Create your first category!
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Jobs Management */}
         <Card className="mb-8">
           <CardHeader>
