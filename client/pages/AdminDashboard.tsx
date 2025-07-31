@@ -86,6 +86,25 @@ export default function AdminDashboard() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Industry options for dropdown
+  const industryOptions = [
+    'Automotive',
+    'ITES & BPO',
+    'Pharmaceuticals',
+    'Manufacturing',
+    'Electrical',
+    'Energy',
+    'Real Estate',
+    'FMCG',
+    'Engineering',
+    'Banking & Finance',
+    'Healthcare',
+    'Education',
+    'Retail',
+    'Hospitality',
+    'Other'
+  ];
+
   // Check authentication
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
