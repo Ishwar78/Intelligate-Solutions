@@ -355,6 +355,55 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
+        {/* Applications Overview */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Recent Applications</CardTitle>
+            <CardDescription>Latest job applications received</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Candidate</TableHead>
+                    <TableHead>Position</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Phone</TableHead>
+                    <TableHead>Applied On</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {applications.slice(0, 10).map((app) => (
+                    <TableRow key={app._id}>
+                      <TableCell className="font-medium">{app.fullName}</TableCell>
+                      <TableCell>{app.job?.title || 'N/A'}</TableCell>
+                      <TableCell>{app.email}</TableCell>
+                      <TableCell>{app.phone}</TableCell>
+                      <TableCell>
+                        {new Date(app.submittedAt).toLocaleDateString('en-IN')}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={app.status === 'pending' ? 'secondary' : 'default'}>
+                          {app.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {applications.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                        No applications received yet
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Jobs Management */}
         <Card className="mb-8">
           <CardHeader>
