@@ -19,10 +19,10 @@ import {
   Target,
   CheckCircle
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import HeroSlider from "@/components/HeroSlider";
-import ServiceDropdown from "@/components/ServiceDropdown";
+import Header from "@/components/Header";
 
 export default function IndustryExpertise() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
