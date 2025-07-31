@@ -302,6 +302,57 @@ export default function AdminDashboard() {
     setIsModalOpen(true);
   };
 
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim()) return;
+
+    try {
+      const response = await fetch('/api/categories', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          name: newCategoryName.trim(),
+          description: newCategoryDescription.trim()
+        })
+      });
+
+      if (response.ok) {
+        setNewCategoryName('');
+        setNewCategoryDescription('');
+        setIsCategoryModalOpen(false);
+        fetchCategories();
+        setSubmitStatus('success');
+        setTimeout(() => setSubmitStatus('idle'), 3000);
+      } else {
+        const result = await response.json();
+        setError(result.error || 'Failed to create category');
+      }
+    } catch (err) {
+      setError('Network error. Please try again.');
+    }
+  };
+
+  const handleDeleteCategory = async (categoryId: string) => {
+    if (window.confirm('Are you sure you want to delete this category?')) {
+      try {
+        const response = await fetch(`/api/categories/${categoryId}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders()
+        });
+
+        if (response.ok) {
+          fetchCategories();
+          setSubmitStatus('success');
+          setTimeout(() => setSubmitStatus('idle'), 3000);
+        } else {
+          const result = await response.json();
+          setError(result.error || 'Failed to delete category');
+        }
+      } catch (err) {
+        setError('Network error. Please try again.');
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
