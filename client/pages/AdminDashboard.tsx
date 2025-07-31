@@ -77,9 +77,13 @@ interface Category {
 export default function AdminDashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryDescription, setNewCategoryDescription] = useState('');
   const [formData, setFormData] = useState<JobFormData>({
     title: '',
     location: '',
