@@ -471,14 +471,21 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <Label htmlFor="industry">Industry *</Label>
-                <Input
-                  id="industry"
-                  name="industry"
-                  required
+                <Select
                   value={formData.industry}
-                  onChange={handleInputChange}
-                  placeholder="e.g. Automotive"
-                />
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, industry: value }))}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select industry" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {industryOptions.map((industry) => (
+                      <SelectItem key={industry} value={industry}>
+                        {industry}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             
