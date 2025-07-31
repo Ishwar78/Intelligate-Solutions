@@ -115,7 +115,34 @@ async function seedDatabase() {
     
     await db.collection("job_applications").createIndex({ jobId: 1 });
     await db.collection("job_applications").createIndex({ submittedAt: -1 });
-    
+
+    // Create categories collection and seed default categories
+    const categoriesCollection = db.collection("job_categories");
+    await categoriesCollection.createIndex({ name: 1 }, { unique: true });
+
+    const defaultCategories = [
+      { name: "Automotive", description: "Automobile and automotive industry", isActive: true, createdAt: new Date(), updatedAt: new Date() },
+      { name: "ITES & BPO", description: "Information Technology and Business Process Outsourcing", isActive: true, createdAt: new Date(), updatedAt: new Date() },
+      { name: "Pharmaceuticals", description: "Pharmaceutical and healthcare industry", isActive: true, createdAt: new Date(), updatedAt: new Date() },
+      { name: "Manufacturing", description: "Manufacturing and production industry", isActive: true, createdAt: new Date(), updatedAt: new Date() },
+      { name: "Electrical", description: "Electrical and electronics industry", isActive: true, createdAt: new Date(), updatedAt: new Date() },
+      { name: "Energy", description: "Energy and renewable energy sector", isActive: true, createdAt: new Date(), updatedAt: new Date() },
+      { name: "Real Estate", description: "Real estate and construction industry", isActive: true, createdAt: new Date(), updatedAt: new Date() },
+      { name: "FMCG", description: "Fast Moving Consumer Goods", isActive: true, createdAt: new Date(), updatedAt: new Date() },
+      { name: "Engineering", description: "Engineering and technical services", isActive: true, createdAt: new Date(), updatedAt: new Date() },
+      { name: "Banking & Finance", description: "Banking, finance and investment sector", isActive: true, createdAt: new Date(), updatedAt: new Date() }
+    ];
+
+    // Insert categories if they don't exist
+    for (const category of defaultCategories) {
+      await categoriesCollection.updateOne(
+        { name: category.name },
+        { $setOnInsert: category },
+        { upsert: true }
+      );
+    }
+
+    console.log("Seeded job categories");
     console.log("Created database indexes");
     console.log("Database seeding completed successfully!");
     
