@@ -16,7 +16,7 @@ async function connectToMongoDB() {
 }
 
 // Email configuration
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'sharmaishwar970@gmail.com',
