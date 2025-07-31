@@ -48,13 +48,12 @@ interface Job {
 export default function Openings() {
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [jobOpenings, setJobOpenings] = useState<Job[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
-
-  const industries = ['All', 'Automotive', 'ITES & BPO', 'Pharmaceuticals', 'Manufacturing', 'Electrical', 'Energy', 'Real Estate'];
 
 const filteredJobs = selectedFilter === 'All'
   ? jobOpenings
