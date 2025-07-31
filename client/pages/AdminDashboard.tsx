@@ -105,6 +105,16 @@ export default function AdminDashboard() {
     'Other'
   ];
 
+  const jobTypeOptions = [
+    'Full-time',
+    'Part-time',
+    'Contract',
+    'Freelance',
+    'Remote',
+    'Hybrid',
+    'Internship'
+  ];
+
   // Check authentication
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
