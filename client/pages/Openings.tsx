@@ -443,21 +443,6 @@ console.log("🎯 Filtered jobs:", filteredJobs);
         </div>
       </section>
 
-      {/* Application Modal */}
-      {selectedJob && (
-        <ApplicationModal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedJob(null);
-          }}
-          jobTitle={selectedJob?.title || ''}
-
-          jobId={selectedJob?._id || ''}
-
-        />
-      )}
-
       {/* Call to Action */}
       <section className="py-20 bg-blue-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -472,9 +457,9 @@ console.log("🎯 Filtered jobs:", filteredJobs);
                   Submit Your Resume
                 </Button>
               </Link>
-              <a 
-                href="https://wa.me/919971019767" 
-                target="_blank" 
+              <a
+                href="https://wa.me/919971019767"
+                target="_blank"
                 rel="noopener noreferrer"
               >
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-900 px-8 py-3">
@@ -624,6 +609,7 @@ console.log("🎯 Filtered jobs:", filteredJobs);
           </div>
         </div>
       </footer>
+
       {/* WhatsApp Floating Button */}
       <a
         href="https://wa.me/919971019767"
@@ -635,11 +621,17 @@ console.log("🎯 Filtered jobs:", filteredJobs);
       </a>
 
       {/* Application Modal */}
-      <ApplicationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        job={selectedJob}
-      />
+      {selectedJob && (
+        <ApplicationModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedJob(null);
+          }}
+          jobTitle={selectedJob.title}
+          jobId={selectedJob._id}
+        />
+      )}
 
       {/* Resume Submit Modal */}
       <ResumeSubmitModal
