@@ -135,10 +135,11 @@ export default function AdminDashboard() {
     }
   }, [navigate]);
 
-  // Fetch jobs and applications
+  // Fetch jobs, applications and categories
   useEffect(() => {
     fetchJobs();
     fetchApplications();
+    fetchCategories();
   }, []);
 
   const getAuthHeaders = () => {
