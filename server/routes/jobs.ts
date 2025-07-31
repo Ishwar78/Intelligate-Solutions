@@ -136,7 +136,15 @@ export const deleteJob: RequestHandler = async (req, res) => {
 export const submitApplication: RequestHandler = async (req, res) => {
   try {
     const { jobId, fullName, email, phone, resume } = req.body;
-    
+
+    const db = await connectToMongoDB();
+
+    // Get job details
+    const job = await db.collection("job_openings").findOne({ _id: new ObjectId(jobId) });
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
     const application = {
       jobId,
       fullName,
@@ -147,14 +155,144 @@ export const submitApplication: RequestHandler = async (req, res) => {
       submittedAt: new Date(),
       createdAt: new Date()
     };
-    
-    const db = await connectToMongoDB();
+
     const result = await db.collection("job_applications").insertOne(application);
-    
-    res.status(201).json({ 
-      success: true, 
+
+    // Send email notification to admin
+    const base64Data = resume.split(',')[1]; // Remove data:type;base64, prefix
+    const fileExtension = resume.includes('pdf') ? 'pdf' : 'doc';
+    const filename = `${fullName.replace(/\s+/g, '_')}_Resume.${fileExtension}`;
+
+    const emailSubject = `New Job Application: ${job.title} - ${fullName}`;
+
+    const adminEmailContent = `
+      <h2>New Job Application - Intelligate Solutions</h2>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px;">
+          <h3 style="color: #1e40af; margin-bottom: 20px;">Job Application Details:</h3>
+
+          <div style="background-color: #dbeafe; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+            <h4 style="color: #1e40af; margin: 0;">Position Applied For:</h4>
+            <p style="margin: 5px 0 0 0; font-size: 18px; font-weight: bold;">${job.title}</p>
+            <p style="margin: 5px 0 0 0; color: #666;">📍 ${job.location} | 💼 ${job.industry} | 💰 ${job.salary}</p>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold; width: 30%;">Full Name:</td>
+              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${fullName}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Email:</td>
+              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${email}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Phone:</td>
+              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${phone}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Resume:</td>
+              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">
+                📎 ${filename} (Attached)
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Applied On:</td>
+              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</td>
+            </tr>
+          </table>
+
+          <div style="margin-top: 20px; padding: 15px; background-color: #dcfce7; border-radius: 4px; border-left: 4px solid #16a34a;">
+            <p style="margin: 0; font-size: 14px; color: #16a34a;">
+              <strong>📄 Resume attached to this email</strong><br>
+              Please download the attachment to view the candidate's complete profile.
+            </p>
+          </div>
+
+          <div style="margin-top: 20px; padding: 15px; background-color: #fff3cd; border-radius: 4px; border-left: 4px solid #ffc107;">
+            <p style="margin: 0; font-size: 14px; color: #856404;">
+              <strong>📋 Next Steps:</strong><br>
+              1. Review the attached resume<br>
+              2. Contact candidate if shortlisted<br>
+              3. Update application status in admin dashboard
+            </p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Send email to admin
+    await transporter.sendMail({
+      from: '"Intelligate Solutions Jobs" <sharmaishwar970@gmail.com>',
+      to: 'sharmaishwar970@gmail.com',
+      subject: emailSubject,
+      html: adminEmailContent,
+      attachments: [{
+        filename: filename,
+        content: base64Data,
+        encoding: 'base64'
+      }]
+    });
+
+    // Send confirmation email to candidate
+    const candidateEmailContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background-color: #1e40af; color: white; padding: 20px; text-align: center;">
+          <h1 style="margin: 0;">Intelligate Solutions</h1>
+          <p style="margin: 5px 0 0 0; opacity: 0.9;">A Gateway of Intelligence</p>
+        </div>
+
+        <div style="padding: 30px; background-color: #f8f9fa;">
+          <h2 style="color: #1e40af; margin-bottom: 20px;">Application Received Successfully!</h2>
+
+          <p>Dear ${fullName},</p>
+
+          <p>Thank you for applying for the <strong>${job.title}</strong> position at Intelligate Solutions. We have successfully received your application and resume.</p>
+
+          <div style="background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #16a34a;">
+            <h3 style="color: #16a34a; margin-top: 0;">Application Details:</h3>
+            <p><strong>Position:</strong> ${job.title}</p>
+            <p><strong>Location:</strong> ${job.location}</p>
+            <p><strong>Industry:</strong> ${job.industry}</p>
+            <p><strong>Application Date:</strong> ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
+          </div>
+
+          <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #1e40af; margin-top: 0;">What Happens Next?</h3>
+            <ul style="color: #374151; margin-bottom: 0;">
+              <li>Our HR team will review your application within 2-3 business days</li>
+              <li>If your profile matches our requirements, we'll contact you for the next steps</li>
+              <li>You can also call us at <strong>+91 9971019767</strong> for any queries</li>
+            </ul>
+          </div>
+
+          <p>We appreciate your interest in joining our team!</p>
+
+          <div style="margin-top: 30px; padding: 20px; background-color: #dbeafe; border-radius: 8px;">
+            <h3 style="color: #1e40af; margin-top: 0;">Contact Us:</h3>
+            <p style="margin-bottom: 10px;"><strong>Phone:</strong> +91 9650923366 / +91 9971019767</p>
+            <p style="margin-bottom: 10px;"><strong>Email:</strong> admin@intelligatesolution.com</p>
+            <p style="margin-bottom: 0;"><strong>WhatsApp:</strong> +91 9971019767</p>
+          </div>
+        </div>
+
+        <div style="background-color: #374151; color: white; padding: 20px; text-align: center;">
+          <p style="margin: 0; font-size: 14px;">© 2025 Intelligate Solutions. All rights reserved.</p>
+        </div>
+      </div>
+    `;
+
+    await transporter.sendMail({
+      from: '"Intelligate Solutions" <sharmaishwar970@gmail.com>',
+      to: email,
+      subject: `Application Received - ${job.title} at Intelligate Solutions`,
+      html: candidateEmailContent
+    });
+
+    res.status(201).json({
+      success: true,
       applicationId: result.insertedId,
-      message: "Application submitted successfully" 
+      message: "Application submitted successfully! You will receive a confirmation email shortly."
     });
   } catch (error) {
     console.error("Error submitting application:", error);
