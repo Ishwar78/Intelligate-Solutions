@@ -513,14 +513,21 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <Label htmlFor="type">Job Type *</Label>
-                <Input
-                  id="type"
-                  name="type"
-                  required
+                <Select
                   value={formData.type}
-                  onChange={handleInputChange}
-                  placeholder="e.g. Full-time"
-                />
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select job type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {jobTypeOptions.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             
