@@ -11,7 +11,10 @@ import {
   submitApplication,
   getApplications,
   adminLogin,
-  verifyAdmin
+  verifyAdmin,
+  getCategories,
+  createCategory,
+  deleteCategory
 } from "./routes/jobs";
 import { sendContactEmail } from "./routes/email";
 
