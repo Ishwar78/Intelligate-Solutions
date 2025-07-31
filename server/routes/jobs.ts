@@ -17,11 +17,11 @@ async function connectToMongoDB() {
 
 // Email configuration
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
-    user: 'sharmaishwar970@gmail.com',
-    pass: 'winfpjblpaxlnwlc'
-  }
+    user: "sharmaishwar970@gmail.com",
+    pass: "winfpjblpaxlnwlc",
+  },
 });
 
 // Get all job openings
@@ -29,7 +29,10 @@ export const getJobOpenings: RequestHandler = async (req, res) => {
   try {
     console.log("Fetching job openings from MongoDB...");
     const db = await connectToMongoDB();
-    const jobs = await db.collection("job_openings").find({ status: "active" }).toArray();
+    const jobs = await db
+      .collection("job_openings")
+      .find({ status: "active" })
+      .toArray();
     console.log(`Found ${jobs.length} active jobs`);
     res.json(jobs);
   } catch (error) {
@@ -43,12 +46,14 @@ export const getJobById: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
     const db = await connectToMongoDB();
-    const job = await db.collection("job_openings").findOne({ _id: new ObjectId(id) });
-    
+    const job = await db
+      .collection("job_openings")
+      .findOne({ _id: new ObjectId(id) });
+
     if (!job) {
       return res.status(404).json({ error: "Job not found" });
     }
-    
+
     res.json(job);
   } catch (error) {
     console.error("Error fetching job:", error);
@@ -59,8 +64,17 @@ export const getJobById: RequestHandler = async (req, res) => {
 // Create new job (Admin only)
 export const createJob: RequestHandler = async (req, res) => {
   try {
-    const { title, location, experience, industry, salary, type, description, skills } = req.body;
-    
+    const {
+      title,
+      location,
+      experience,
+      industry,
+      salary,
+      type,
+      description,
+      skills,
+    } = req.body;
+
     const newJob = {
       title,
       location,
@@ -73,16 +87,16 @@ export const createJob: RequestHandler = async (req, res) => {
       status: "active",
       postedDate: new Date(),
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
-    
+
     const db = await connectToMongoDB();
     const result = await db.collection("job_openings").insertOne(newJob);
-    
-    res.status(201).json({ 
-      success: true, 
+
+    res.status(201).json({
+      success: true,
       jobId: result.insertedId,
-      message: "Job created successfully" 
+      message: "Job created successfully",
     });
   } catch (error) {
     console.error("Error creating job:", error);
@@ -95,17 +109,16 @@ export const updateJob: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = { ...req.body, updatedAt: new Date() };
-    
+
     const db = await connectToMongoDB();
-    const result = await db.collection("job_openings").updateOne(
-      { _id: new ObjectId(id) },
-      { $set: updateData }
-    );
-    
+    const result = await db
+      .collection("job_openings")
+      .updateOne({ _id: new ObjectId(id) }, { $set: updateData });
+
     if (result.matchedCount === 0) {
       return res.status(404).json({ error: "Job not found" });
     }
-    
+
     res.json({ success: true, message: "Job updated successfully" });
   } catch (error) {
     console.error("Error updating job:", error);
@@ -117,14 +130,16 @@ export const updateJob: RequestHandler = async (req, res) => {
 export const deleteJob: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     const db = await connectToMongoDB();
-    const result = await db.collection("job_openings").deleteOne({ _id: new ObjectId(id) });
-    
+    const result = await db
+      .collection("job_openings")
+      .deleteOne({ _id: new ObjectId(id) });
+
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: "Job not found" });
     }
-    
+
     res.json({ success: true, message: "Job deleted successfully" });
   } catch (error) {
     console.error("Error deleting job:", error);
@@ -140,7 +155,9 @@ export const submitApplication: RequestHandler = async (req, res) => {
     const db = await connectToMongoDB();
 
     // Get job details
-    const job = await db.collection("job_openings").findOne({ _id: new ObjectId(jobId) });
+    const job = await db
+      .collection("job_openings")
+      .findOne({ _id: new ObjectId(jobId) });
     if (!job) {
       return res.status(404).json({ error: "Job not found" });
     }
@@ -153,15 +170,17 @@ export const submitApplication: RequestHandler = async (req, res) => {
       resume, // base64 encoded file
       status: "pending",
       submittedAt: new Date(),
-      createdAt: new Date()
+      createdAt: new Date(),
     };
 
-    const result = await db.collection("job_applications").insertOne(application);
+    const result = await db
+      .collection("job_applications")
+      .insertOne(application);
 
     // Send email notification to admin
-    const base64Data = resume.split(',')[1]; // Remove data:type;base64, prefix
-    const fileExtension = resume.includes('pdf') ? 'pdf' : 'doc';
-    const filename = `${fullName.replace(/\s+/g, '_')}_Resume.${fileExtension}`;
+    const base64Data = resume.split(",")[1]; // Remove data:type;base64, prefix
+    const fileExtension = resume.includes("pdf") ? "pdf" : "doc";
+    const filename = `${fullName.replace(/\s+/g, "_")}_Resume.${fileExtension}`;
 
     const emailSubject = `New Job Application: ${job.title} - ${fullName}`;
 
@@ -198,7 +217,7 @@ export const submitApplication: RequestHandler = async (req, res) => {
             </tr>
             <tr>
               <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: bold;">Applied On:</td>
-              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</td>
+              <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</td>
             </tr>
           </table>
 
@@ -225,14 +244,16 @@ export const submitApplication: RequestHandler = async (req, res) => {
     try {
       await transporter.sendMail({
         from: '"Intelligate Solutions Jobs" <sharmaishwar970@gmail.com>',
-        to: 'sharmaishwar970@gmail.com',
+        to: "sharmaishwar970@gmail.com",
         subject: emailSubject,
         html: adminEmailContent,
-        attachments: [{
-          filename: filename,
-          content: base64Data,
-          encoding: 'base64'
-        }]
+        attachments: [
+          {
+            filename: filename,
+            content: base64Data,
+            encoding: "base64",
+          },
+        ],
       });
       console.log("Admin email sent successfully");
     } catch (emailError) {
@@ -260,7 +281,7 @@ export const submitApplication: RequestHandler = async (req, res) => {
             <p><strong>Position:</strong> ${job.title}</p>
             <p><strong>Location:</strong> ${job.location}</p>
             <p><strong>Industry:</strong> ${job.industry}</p>
-            <p><strong>Application Date:</strong> ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
+            <p><strong>Application Date:</strong> ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>
           </div>
 
           <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
@@ -293,7 +314,7 @@ export const submitApplication: RequestHandler = async (req, res) => {
         from: '"Intelligate Solutions" <sharmaishwar970@gmail.com>',
         to: email,
         subject: `Application Received - ${job.title} at Intelligate Solutions`,
-        html: candidateEmailContent
+        html: candidateEmailContent,
       });
       console.log("Candidate email sent successfully");
     } catch (emailError) {
@@ -304,7 +325,8 @@ export const submitApplication: RequestHandler = async (req, res) => {
     res.status(201).json({
       success: true,
       applicationId: result.insertedId,
-      message: "Application submitted successfully! You will receive a confirmation email shortly."
+      message:
+        "Application submitted successfully! You will receive a confirmation email shortly.",
     });
   } catch (error) {
     console.error("Error submitting application:", error);
@@ -316,24 +338,26 @@ export const submitApplication: RequestHandler = async (req, res) => {
 export const getApplications: RequestHandler = async (req, res) => {
   try {
     const db = await connectToMongoDB();
-    const applications = await db.collection("job_applications")
+    const applications = await db
+      .collection("job_applications")
       .aggregate([
         {
           $lookup: {
             from: "job_openings",
             localField: "jobId",
             foreignField: "_id",
-            as: "job"
-          }
+            as: "job",
+          },
         },
         {
-          $unwind: "$job"
+          $unwind: "$job",
         },
         {
-          $sort: { submittedAt: -1 }
-        }
-      ]).toArray();
-    
+          $sort: { submittedAt: -1 },
+        },
+      ])
+      .toArray();
+
     res.json(applications);
   } catch (error) {
     console.error("Error fetching applications:", error);
@@ -345,15 +369,15 @@ export const getApplications: RequestHandler = async (req, res) => {
 export const adminLogin: RequestHandler = async (req, res) => {
   try {
     const { username, password } = req.body;
-    
+
     // Simple authentication - in production, use proper hashing
     if (username === "admin" && password === "intelligate2025") {
       // Generate a simple session token
-      const token = Buffer.from(`${username}:${Date.now()}`).toString('base64');
-      res.json({ 
-        success: true, 
-        token, 
-        message: "Login successful" 
+      const token = Buffer.from(`${username}:${Date.now()}`).toString("base64");
+      res.json({
+        success: true,
+        token,
+        message: "Login successful",
       });
     } else {
       res.status(401).json({ error: "Invalid credentials" });
@@ -368,7 +392,7 @@ export const adminLogin: RequestHandler = async (req, res) => {
 export const verifyAdmin: RequestHandler = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Access denied. No token provided." });
   }
 
@@ -376,8 +400,8 @@ export const verifyAdmin: RequestHandler = (req, res, next) => {
 
   try {
     // Simple token verification - in production, use JWT
-    const decoded = Buffer.from(token, 'base64').toString();
-    if (decoded.includes('admin:')) {
+    const decoded = Buffer.from(token, "base64").toString();
+    if (decoded.includes("admin:")) {
       next();
     } else {
       res.status(401).json({ error: "Invalid token" });
@@ -391,7 +415,11 @@ export const verifyAdmin: RequestHandler = (req, res, next) => {
 export const getCategories: RequestHandler = async (req, res) => {
   try {
     const db = await connectToMongoDB();
-    const categories = await db.collection("job_categories").find({}).sort({ name: 1 }).toArray();
+    const categories = await db
+      .collection("job_categories")
+      .find({})
+      .sort({ name: 1 })
+      .toArray();
     res.json(categories);
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -412,7 +440,7 @@ export const createCategory: RequestHandler = async (req, res) => {
 
     // Check if category already exists
     const existingCategory = await db.collection("job_categories").findOne({
-      name: { $regex: new RegExp(`^${name}$`, 'i') }
+      name: { $regex: new RegExp(`^${name}$`, "i") },
     });
 
     if (existingCategory) {
@@ -421,10 +449,10 @@ export const createCategory: RequestHandler = async (req, res) => {
 
     const newCategory = {
       name: name.trim(),
-      description: description?.trim() || '',
+      description: description?.trim() || "",
       isActive: true,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     const result = await db.collection("job_categories").insertOne(newCategory);
@@ -432,7 +460,7 @@ export const createCategory: RequestHandler = async (req, res) => {
     res.status(201).json({
       success: true,
       categoryId: result.insertedId,
-      message: "Category created successfully"
+      message: "Category created successfully",
     });
   } catch (error) {
     console.error("Error creating category:", error);
@@ -449,14 +477,21 @@ export const deleteCategory: RequestHandler = async (req, res) => {
 
     // Check if any jobs are using this category
     const jobsUsingCategory = await db.collection("job_openings").findOne({
-      industry: await db.collection("job_categories").findOne({ _id: new ObjectId(id) }).then(cat => cat?.name)
+      industry: await db
+        .collection("job_categories")
+        .findOne({ _id: new ObjectId(id) })
+        .then((cat) => cat?.name),
     });
 
     if (jobsUsingCategory) {
-      return res.status(400).json({ error: "Cannot delete category that is being used by jobs" });
+      return res
+        .status(400)
+        .json({ error: "Cannot delete category that is being used by jobs" });
     }
 
-    const result = await db.collection("job_categories").deleteOne({ _id: new ObjectId(id) });
+    const result = await db
+      .collection("job_categories")
+      .deleteOne({ _id: new ObjectId(id) });
 
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: "Category not found" });

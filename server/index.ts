@@ -14,7 +14,7 @@ import {
   verifyAdmin,
   getCategories,
   createCategory,
-  deleteCategory
+  deleteCategory,
 } from "./routes/jobs";
 import { sendContactEmail } from "./routes/email";
 
@@ -23,8 +23,8 @@ export function createServer() {
 
   // Middleware
   app.use(cors());
-  app.use(express.json({ limit: '10mb' })); // Increase limit for file uploads
-  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  app.use(express.json({ limit: "10mb" })); // Increase limit for file uploads
+  app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
   // Example API routes
   app.get("/api/ping", (_req, res) => {

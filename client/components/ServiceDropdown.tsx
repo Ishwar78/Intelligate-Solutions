@@ -9,7 +9,7 @@ const services = [
   { title: "RPO (Recruitment Process Outsourcing)", path: "/services/rpo" },
   { title: "Talent Mapping", path: "/services/talent-mapping" },
   { title: "Competitor Analysis", path: "/services/competitor-analysis" },
-  { title: "Diversity Hiring", path: "/services/diversity-hiring" }
+  { title: "Diversity Hiring", path: "/services/diversity-hiring" },
 ];
 
 interface ServiceDropdownProps {
@@ -17,10 +17,13 @@ interface ServiceDropdownProps {
   isMobile?: boolean;
 }
 
-export default function ServiceDropdown({ currentPath, isMobile = false }: ServiceDropdownProps) {
+export default function ServiceDropdown({
+  currentPath,
+  isMobile = false,
+}: ServiceDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const isActive = currentPath?.startsWith('/services');
+  const isActive = currentPath?.startsWith("/services");
 
   if (isMobile) {
     return (
@@ -28,23 +31,23 @@ export default function ServiceDropdown({ currentPath, isMobile = false }: Servi
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={`flex items-center justify-between w-full font-medium transition-colors ${
-            isActive
-              ? 'text-blue-900'
-              : 'text-gray-700 hover:text-blue-900'
+            isActive ? "text-blue-900" : "text-gray-700 hover:text-blue-900"
           }`}
         >
           Services
           <ChevronDown
             className={`h-4 w-4 transition-transform duration-200 ${
-              isOpen ? 'rotate-180' : ''
+              isOpen ? "rotate-180" : ""
             }`}
           />
         </button>
 
         {/* Mobile Menu */}
-        <div className={`overflow-hidden transition-all duration-200 ${
-          isOpen ? 'max-h-96 mt-2' : 'max-h-0'
-        }`}>
+        <div
+          className={`overflow-hidden transition-all duration-200 ${
+            isOpen ? "max-h-96 mt-2" : "max-h-0"
+          }`}
+        >
           <div className="pl-4 space-y-1">
             {services.map((service, index) => (
               <Link
@@ -71,14 +74,14 @@ export default function ServiceDropdown({ currentPath, isMobile = false }: Servi
       <button
         className={`flex items-center gap-1 font-medium transition-colors ${
           isActive
-            ? 'text-gray-900 hover:text-blue-900'
-            : 'text-gray-700 hover:text-blue-900'
+            ? "text-gray-900 hover:text-blue-900"
+            : "text-gray-700 hover:text-blue-900"
         }`}
       >
         Services
         <ChevronDown
           className={`h-4 w-4 transition-transform duration-200 ${
-            isOpen ? 'rotate-180' : ''
+            isOpen ? "rotate-180" : ""
           }`}
         />
       </button>
@@ -87,8 +90,8 @@ export default function ServiceDropdown({ currentPath, isMobile = false }: Servi
       <div
         className={`absolute top-full left-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 transition-all duration-200 z-50 ${
           isOpen
-            ? 'opacity-100 visible transform translate-y-0'
-            : 'opacity-0 invisible transform -translate-y-2'
+            ? "opacity-100 visible transform translate-y-0"
+            : "opacity-0 invisible transform -translate-y-2"
         }`}
       >
         <div className="py-2">
@@ -103,7 +106,7 @@ export default function ServiceDropdown({ currentPath, isMobile = false }: Servi
             </Link>
           ))}
         </div>
-        
+
         {/* View All Services Link */}
         {/* <div className="border-t border-gray-200 p-2">
           <Link

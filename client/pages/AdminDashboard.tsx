@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -11,7 +17,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -20,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -28,16 +34,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
-  LogOut, 
-  Briefcase, 
-  Users, 
+import {
+  Plus,
+  Edit,
+  Trash2,
+  LogOut,
+  Briefcase,
+  Users,
   Clock,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -82,40 +88,44 @@ export default function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
-  const [newCategoryName, setNewCategoryName] = useState('');
-  const [newCategoryDescription, setNewCategoryDescription] = useState('');
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryDescription, setNewCategoryDescription] = useState("");
   const [formData, setFormData] = useState<JobFormData>({
-    title: '',
-    location: '',
-    experience: '',
-    industry: '',
-    salary: '',
-    type: 'Full-time',
-    description: '',
-    skills: ''
+    title: "",
+    location: "",
+    experience: "",
+    industry: "",
+    salary: "",
+    type: "Full-time",
+    description: "",
+    skills: "",
   });
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [error, setError] = useState('');
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   // Get industry options from database categories
-  const industryOptions = categories.filter(cat => cat.isActive).map(cat => cat.name);
+  const industryOptions = categories
+    .filter((cat) => cat.isActive)
+    .map((cat) => cat.name);
 
   const jobTypeOptions = [
-    'Full-time',
-    'Part-time',
-    'Contract',
-    'Freelance',
-    'Remote',
-    'Hybrid',
-    'Internship'
+    "Full-time",
+    "Part-time",
+    "Contract",
+    "Freelance",
+    "Remote",
+    "Hybrid",
+    "Internship",
   ];
 
   // Check authentication
   useEffect(() => {
-    const token = localStorage.getItem('adminToken');
+    const token = localStorage.getItem("adminToken");
     if (!token) {
-      navigate('/admin/login');
+      navigate("/admin/login");
     }
   }, [navigate]);
 
@@ -127,26 +137,26 @@ export default function AdminDashboard() {
   }, []);
 
   const getAuthHeaders = () => {
-    const token = localStorage.getItem('adminToken');
+    const token = localStorage.getItem("adminToken");
     return {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     };
   };
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch('/api/jobs', {
-        headers: getAuthHeaders()
+      const response = await fetch("/api/jobs", {
+        headers: getAuthHeaders(),
       });
       if (response.ok) {
         const jobsData = await response.json();
         setJobs(jobsData);
       } else if (response.status === 401) {
-        navigate('/admin/login');
+        navigate("/admin/login");
       }
     } catch (err) {
-      setError('Failed to fetch jobs');
+      setError("Failed to fetch jobs");
     } finally {
       setLoading(false);
     }
@@ -154,86 +164,91 @@ export default function AdminDashboard() {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch('/api/applications', {
-        headers: getAuthHeaders()
+      const response = await fetch("/api/applications", {
+        headers: getAuthHeaders(),
       });
       if (response.ok) {
         const appsData = await response.json();
         setApplications(appsData);
       }
     } catch (err) {
-      console.error('Failed to fetch applications');
+      console.error("Failed to fetch applications");
     }
   };
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/categories');
+      const response = await fetch("/api/categories");
       if (response.ok) {
         const categoriesData = await response.json();
         setCategories(categoriesData);
       }
     } catch (err) {
-      console.error('Failed to fetch categories');
+      console.error("Failed to fetch categories");
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    navigate('/admin/login');
+    localStorage.removeItem("adminToken");
+    navigate("/admin/login");
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
       const jobData = {
         ...formData,
-        skills: formData.skills.split(',').map(skill => skill.trim()).filter(skill => skill)
+        skills: formData.skills
+          .split(",")
+          .map((skill) => skill.trim())
+          .filter((skill) => skill),
       };
 
-      const url = editingJob ? `/api/jobs/${editingJob._id}` : '/api/jobs';
-      const method = editingJob ? 'PUT' : 'POST';
+      const url = editingJob ? `/api/jobs/${editingJob._id}` : "/api/jobs";
+      const method = editingJob ? "PUT" : "POST";
 
       const response = await fetch(url, {
         method,
         headers: getAuthHeaders(),
-        body: JSON.stringify(jobData)
+        body: JSON.stringify(jobData),
       });
 
       if (response.ok) {
-        setSubmitStatus('success');
+        setSubmitStatus("success");
         setIsModalOpen(false);
         setEditingJob(null);
         setFormData({
-          title: '',
-          location: '',
-          experience: '',
-          industry: '',
-          salary: '',
-          type: 'Full-time',
-          description: '',
-          skills: ''
+          title: "",
+          location: "",
+          experience: "",
+          industry: "",
+          salary: "",
+          type: "Full-time",
+          description: "",
+          skills: "",
         });
         fetchJobs();
-        setTimeout(() => setSubmitStatus('idle'), 3000);
+        setTimeout(() => setSubmitStatus("idle"), 3000);
       } else {
         const result = await response.json();
-        setError(result.error || 'Failed to save job');
-        setSubmitStatus('error');
+        setError(result.error || "Failed to save job");
+        setSubmitStatus("error");
       }
     } catch (err) {
-      setError('Network error. Please try again.');
-      setSubmitStatus('error');
+      setError("Network error. Please try again.");
+      setSubmitStatus("error");
     }
   };
 
@@ -247,26 +262,26 @@ export default function AdminDashboard() {
       salary: job.salary,
       type: job.type,
       description: job.description,
-      skills: job.skills.join(', ')
+      skills: job.skills.join(", "),
     });
     setIsModalOpen(true);
   };
 
   const handleDelete = async (jobId: string) => {
-    if (window.confirm('Are you sure you want to delete this job?')) {
+    if (window.confirm("Are you sure you want to delete this job?")) {
       try {
         const response = await fetch(`/api/jobs/${jobId}`, {
-          method: 'DELETE',
-          headers: getAuthHeaders()
+          method: "DELETE",
+          headers: getAuthHeaders(),
         });
 
         if (response.ok) {
           fetchJobs();
         } else {
-          setError('Failed to delete job');
+          setError("Failed to delete job");
         }
       } catch (err) {
-        setError('Network error. Please try again.');
+        setError("Network error. Please try again.");
       }
     }
   };
@@ -274,14 +289,14 @@ export default function AdminDashboard() {
   const openNewJobModal = () => {
     setEditingJob(null);
     setFormData({
-      title: '',
-      location: '',
-      experience: '',
-      industry: '',
-      salary: '',
-      type: 'Full-time',
-      description: '',
-      skills: ''
+      title: "",
+      location: "",
+      experience: "",
+      industry: "",
+      salary: "",
+      type: "Full-time",
+      description: "",
+      skills: "",
     });
     setIsModalOpen(true);
   };
@@ -290,49 +305,49 @@ export default function AdminDashboard() {
     if (!newCategoryName.trim()) return;
 
     try {
-      const response = await fetch('/api/categories', {
-        method: 'POST',
+      const response = await fetch("/api/categories", {
+        method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify({
           name: newCategoryName.trim(),
-          description: newCategoryDescription.trim()
-        })
+          description: newCategoryDescription.trim(),
+        }),
       });
 
       if (response.ok) {
-        setNewCategoryName('');
-        setNewCategoryDescription('');
+        setNewCategoryName("");
+        setNewCategoryDescription("");
         setIsCategoryModalOpen(false);
         fetchCategories();
-        setSubmitStatus('success');
-        setTimeout(() => setSubmitStatus('idle'), 3000);
+        setSubmitStatus("success");
+        setTimeout(() => setSubmitStatus("idle"), 3000);
       } else {
         const result = await response.json();
-        setError(result.error || 'Failed to create category');
+        setError(result.error || "Failed to create category");
       }
     } catch (err) {
-      setError('Network error. Please try again.');
+      setError("Network error. Please try again.");
     }
   };
 
   const handleDeleteCategory = async (categoryId: string) => {
-    if (window.confirm('Are you sure you want to delete this category?')) {
+    if (window.confirm("Are you sure you want to delete this category?")) {
       try {
         const response = await fetch(`/api/categories/${categoryId}`, {
-          method: 'DELETE',
-          headers: getAuthHeaders()
+          method: "DELETE",
+          headers: getAuthHeaders(),
         });
 
         if (response.ok) {
           fetchCategories();
-          setSubmitStatus('success');
-          setTimeout(() => setSubmitStatus('idle'), 3000);
+          setSubmitStatus("success");
+          setTimeout(() => setSubmitStatus("idle"), 3000);
         } else {
           const result = await response.json();
-          setError(result.error || 'Failed to delete category');
+          setError(result.error || "Failed to delete category");
         }
       } catch (err) {
-        setError('Network error. Please try again.');
+        setError("Network error. Please try again.");
       }
     }
   };
@@ -364,15 +379,14 @@ export default function AdminDashboard() {
 
       {/* Dashboard Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
         {/* Status Messages */}
-        {submitStatus === 'success' && (
+        {submitStatus === "success" && (
           <div className="mb-6 flex items-center gap-2 text-green-600 bg-green-50 p-3 rounded-md">
             <CheckCircle className="h-4 w-4" />
             <p>Job saved successfully!</p>
           </div>
         )}
-        
+
         {error && (
           <div className="mb-6 flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded-md">
             <AlertCircle className="h-4 w-4" />
@@ -391,17 +405,19 @@ export default function AdminDashboard() {
               <div className="text-2xl font-bold">{jobs.length}</div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Applications</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Applications
+              </CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{applications.length}</div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Jobs</CardTitle>
@@ -409,7 +425,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {jobs.filter(job => job.status === 'active').length}
+                {jobs.filter((job) => job.status === "active").length}
               </div>
             </CardContent>
           </Card>
@@ -437,15 +453,21 @@ export default function AdminDashboard() {
                 <TableBody>
                   {applications.slice(0, 10).map((app) => (
                     <TableRow key={app._id}>
-                      <TableCell className="font-medium">{app.fullName}</TableCell>
-                      <TableCell>{app.job?.title || 'N/A'}</TableCell>
+                      <TableCell className="font-medium">
+                        {app.fullName}
+                      </TableCell>
+                      <TableCell>{app.job?.title || "N/A"}</TableCell>
                       <TableCell>{app.email}</TableCell>
                       <TableCell>{app.phone}</TableCell>
                       <TableCell>
-                        {new Date(app.submittedAt).toLocaleDateString('en-IN')}
+                        {new Date(app.submittedAt).toLocaleDateString("en-IN")}
                       </TableCell>
                       <TableCell>
-                        <Badge variant={app.status === 'pending' ? 'secondary' : 'default'}>
+                        <Badge
+                          variant={
+                            app.status === "pending" ? "secondary" : "default"
+                          }
+                        >
                           {app.status}
                         </Badge>
                       </TableCell>
@@ -453,7 +475,10 @@ export default function AdminDashboard() {
                   ))}
                   {applications.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                      <TableCell
+                        colSpan={6}
+                        className="text-center py-8 text-gray-500"
+                      >
                         No applications received yet
                       </TableCell>
                     </TableRow>
@@ -470,9 +495,14 @@ export default function AdminDashboard() {
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle>Job Categories</CardTitle>
-                <CardDescription>Manage job categories and industries</CardDescription>
+                <CardDescription>
+                  Manage job categories and industries
+                </CardDescription>
               </div>
-              <Button onClick={() => setIsCategoryModalOpen(true)} className="bg-green-600 hover:bg-green-700">
+              <Button
+                onClick={() => setIsCategoryModalOpen(true)}
+                className="bg-green-600 hover:bg-green-700"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Category
               </Button>
@@ -481,11 +511,18 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {categories.map((category) => (
-                <div key={category._id} className="border rounded-lg p-4 flex justify-between items-start">
+                <div
+                  key={category._id}
+                  className="border rounded-lg p-4 flex justify-between items-start"
+                >
                   <div>
-                    <h4 className="font-semibold text-gray-900">{category.name}</h4>
+                    <h4 className="font-semibold text-gray-900">
+                      {category.name}
+                    </h4>
                     {category.description && (
-                      <p className="text-sm text-gray-600 mt-1">{category.description}</p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {category.description}
+                      </p>
                     )}
                   </div>
                   <Button
@@ -515,7 +552,10 @@ export default function AdminDashboard() {
                 <CardTitle>Job Openings</CardTitle>
                 <CardDescription>Manage all job postings</CardDescription>
               </div>
-              <Button onClick={openNewJobModal} className="bg-blue-900 hover:bg-blue-800">
+              <Button
+                onClick={openNewJobModal}
+                className="bg-blue-900 hover:bg-blue-800"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Add New Job
               </Button>
@@ -542,7 +582,11 @@ export default function AdminDashboard() {
                       <TableCell>{job.industry}</TableCell>
                       <TableCell>{job.experience}</TableCell>
                       <TableCell>
-                        <Badge variant={job.status === 'active' ? 'default' : 'secondary'}>
+                        <Badge
+                          variant={
+                            job.status === "active" ? "default" : "secondary"
+                          }
+                        >
                           {job.status}
                         </Badge>
                       </TableCell>
@@ -569,7 +613,10 @@ export default function AdminDashboard() {
                   ))}
                   {jobs.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                      <TableCell
+                        colSpan={6}
+                        className="text-center py-8 text-gray-500"
+                      >
                         No jobs found. Create your first job posting!
                       </TableCell>
                     </TableRow>
@@ -585,14 +632,10 @@ export default function AdminDashboard() {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              {editingJob ? 'Edit Job' : 'Add New Job'}
-            </DialogTitle>
-            <DialogDescription>
-              Fill in the job details below
-            </DialogDescription>
+            <DialogTitle>{editingJob ? "Edit Job" : "Add New Job"}</DialogTitle>
+            <DialogDescription>Fill in the job details below</DialogDescription>
           </DialogHeader>
-          
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -618,7 +661,7 @@ export default function AdminDashboard() {
                 />
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="experience">Experience *</Label>
@@ -635,7 +678,9 @@ export default function AdminDashboard() {
                 <Label htmlFor="industry">Industry *</Label>
                 <Select
                   value={formData.industry}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, industry: value }))}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, industry: value }))
+                  }
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select industry" />
@@ -650,7 +695,7 @@ export default function AdminDashboard() {
                 </Select>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="salary">Salary *</Label>
@@ -667,7 +712,9 @@ export default function AdminDashboard() {
                 <Label htmlFor="type">Job Type *</Label>
                 <Select
                   value={formData.type}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, type: value }))
+                  }
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select job type" />
@@ -682,7 +729,7 @@ export default function AdminDashboard() {
                 </Select>
               </div>
             </div>
-            
+
             <div>
               <Label htmlFor="description">Job Description *</Label>
               <Textarea
@@ -695,7 +742,7 @@ export default function AdminDashboard() {
                 placeholder="Enter detailed job description..."
               />
             </div>
-            
+
             <div>
               <Label htmlFor="skills">Skills (comma-separated)</Label>
               <Input
@@ -706,13 +753,17 @@ export default function AdminDashboard() {
                 placeholder="e.g. React, Node.js, MongoDB"
               />
             </div>
-            
+
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsModalOpen(false)}
+              >
                 Cancel
               </Button>
               <Button type="submit" className="bg-blue-900 hover:bg-blue-800">
-                {editingJob ? 'Update Job' : 'Create Job'}
+                {editingJob ? "Update Job" : "Create Job"}
               </Button>
             </DialogFooter>
           </form>
@@ -759,8 +810,8 @@ export default function AdminDashboard() {
               variant="outline"
               onClick={() => {
                 setIsCategoryModalOpen(false);
-                setNewCategoryName('');
-                setNewCategoryDescription('');
+                setNewCategoryName("");
+                setNewCategoryDescription("");
               }}
             >
               Cancel

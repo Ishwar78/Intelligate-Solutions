@@ -1,10 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Phone, 
-  Mail, 
-  MapPin, 
+import {
+  Phone,
+  Mail,
+  MapPin,
   MessageCircle,
   Car,
   Cpu,
@@ -17,7 +23,7 @@ import {
   Award,
   Users,
   Target,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -25,7 +31,6 @@ import HeroSlider from "@/components/HeroSlider";
 import Header from "@/components/Header";
 
 export default function IndustryExpertise() {
-
   const industries = [
     { name: "ITES & BPO", icon: Cpu, color: "blue" },
     { name: "FMCG", icon: Home, color: "green" },
@@ -34,7 +39,7 @@ export default function IndustryExpertise() {
     { name: "Automotive", icon: Car, color: "red" },
     { name: "Energy", icon: Zap, color: "yellow" },
     { name: "Manufacturing", icon: Truck, color: "gray" },
-    { name: "Real Estate", icon: Building, color: "indigo" }
+    { name: "Real Estate", icon: Building, color: "indigo" },
   ];
 
   const successStories = [
@@ -42,41 +47,44 @@ export default function IndustryExpertise() {
       industry: "Automotive",
       role: "VP - Manufacturing Operations",
       challenge: "Electric Vehicle transition expertise needed",
-      solution: "Placed seasoned leader with 15+ years EV experience from Tesla supplier ecosystem",
-      impact: "40% faster production ramp-up, reduced quality issues by 60%"
+      solution:
+        "Placed seasoned leader with 15+ years EV experience from Tesla supplier ecosystem",
+      impact: "40% faster production ramp-up, reduced quality issues by 60%",
     },
     {
       industry: "Pharmaceuticals",
       role: "Head of Regulatory Affairs",
       challenge: "Complex USFDA compliance requirements",
-      solution: "Recruited expert with direct USFDA inspection experience across 3 countries",
-      impact: "Zero compliance violations, 25% faster drug approval timeline"
+      solution:
+        "Recruited expert with direct USFDA inspection experience across 3 countries",
+      impact: "Zero compliance violations, 25% faster drug approval timeline",
     },
     {
       industry: "ITES",
       role: "Chief Technology Officer",
       challenge: "Digital transformation in legacy systems",
-      solution: "Identified CTO with proven track record in cloud migration at scale",
-      impact: "50% infrastructure cost reduction, 3x faster deployment cycles"
-    }
+      solution:
+        "Identified CTO with proven track record in cloud migration at scale",
+      impact: "50% infrastructure cost reduction, 3x faster deployment cycles",
+    },
   ];
 
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+      rootMargin: "0px 0px -50px 0px",
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
+          entry.target.classList.add("in-view");
         }
       });
     }, observerOptions);
 
-    const animateElements = document.querySelectorAll('.animate-on-scroll');
-    animateElements.forEach(el => observer.observe(el));
+    const animateElements = document.querySelectorAll(".animate-on-scroll");
+    animateElements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
   }, []);
@@ -87,11 +95,11 @@ export default function IndustryExpertise() {
 
       {/* Hero Section with Slider */}
       <section className="relative text-white">
-        <HeroSlider 
+        <HeroSlider
           images={[
             "https://cdn.builder.io/api/v1/image/assets%2F006b1d80f49744f8a88951a12aeaff7a%2F2f9213ee427a496d98636f69b62dc87a?format=webp&width=800",
             "https://cdn.builder.io/api/v1/image/assets%2F006b1d80f49744f8a88951a12aeaff7a%2Ffda984e4a4c14678aacca680c004dc21?format=webp&width=800",
-            "https://cdn.builder.io/api/v1/image/assets%2F006b1d80f49744f8a88951a12aeaff7a%2F4c544a153f3d4f8ab328d65415496f5b?format=webp&width=800"
+            "https://cdn.builder.io/api/v1/image/assets%2F006b1d80f49744f8a88951a12aeaff7a%2F4c544a153f3d4f8ab328d65415496f5b?format=webp&width=800",
           ]}
           height="h-[500px]"
         />
@@ -101,7 +109,9 @@ export default function IndustryExpertise() {
               Domain-Focused Hiring, Delivered with Precision
             </h1>
             <p className="text-xl md:text-2xl max-w-4xl mx-auto animate-on-scroll">
-              We understand the nuances of each industry, enabling us to deliver talent that drives impact. From Automotive to Pharmaceuticals, our specialists recruit with domain precision.
+              We understand the nuances of each industry, enabling us to deliver
+              talent that drives impact. From Automotive to Pharmaceuticals, our
+              specialists recruit with domain precision.
             </p>
           </div>
         </div>
@@ -111,22 +121,32 @@ export default function IndustryExpertise() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 animate-on-scroll">Industries We Cover</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 animate-on-scroll">
+              Industries We Cover
+            </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto animate-on-scroll">
-              Our deep industry expertise spans across multiple verticals, ensuring we understand your unique talent requirements
+              Our deep industry expertise spans across multiple verticals,
+              ensuring we understand your unique talent requirements
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {industries.map((industry, index) => {
               const Icon = industry.icon;
               return (
-                <Card key={index} className="professional-card animate-on-scroll hover:shadow-xl transition-all duration-300 group">
+                <Card
+                  key={index}
+                  className="professional-card animate-on-scroll hover:shadow-xl transition-all duration-300 group"
+                >
                   <CardContent className="p-6 text-center">
-                    <div className={`w-16 h-16 rounded-full bg-${industry.color}-100 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <div
+                      className={`w-16 h-16 rounded-full bg-${industry.color}-100 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}
+                    >
                       <Icon className={`h-8 w-8 text-${industry.color}-600`} />
                     </div>
-                    <h3 className="font-bold text-gray-900 text-lg">{industry.name}</h3>
+                    <h3 className="font-bold text-gray-900 text-lg">
+                      {industry.name}
+                    </h3>
                   </CardContent>
                 </Card>
               );
@@ -139,34 +159,51 @@ export default function IndustryExpertise() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 animate-on-scroll">Success Stories</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 animate-on-scroll">
+              Success Stories
+            </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto animate-on-scroll">
-              Industry-specific placement cases that demonstrate our expertise and impact
+              Industry-specific placement cases that demonstrate our expertise
+              and impact
             </p>
           </div>
-          
+
           <div className="space-y-8">
             {successStories.map((story, index) => (
               <Card key={index} className="professional-card animate-on-scroll">
                 <CardContent className="p-8">
                   <div className="grid md:grid-cols-3 gap-6">
                     <div>
-                      <Badge variant="secondary" className="mb-3">{story.industry}</Badge>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{story.role}</h3>
+                      <Badge variant="secondary" className="mb-3">
+                        {story.industry}
+                      </Badge>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {story.role}
+                      </h3>
                       <div className="flex items-center gap-2 text-gray-600">
                         <CheckCircle className="h-4 w-4 text-green-600" />
                         <span className="text-sm">Successful Placement</span>
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Challenge:</h4>
-                      <p className="text-gray-700 text-sm mb-4">{story.challenge}</p>
-                      <h4 className="font-semibold text-gray-900 mb-2">Solution:</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">
+                        Challenge:
+                      </h4>
+                      <p className="text-gray-700 text-sm mb-4">
+                        {story.challenge}
+                      </p>
+                      <h4 className="font-semibold text-gray-900 mb-2">
+                        Solution:
+                      </h4>
                       <p className="text-gray-700 text-sm">{story.solution}</p>
                     </div>
                     <div className="bg-green-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-green-900 mb-2">Impact:</h4>
-                      <p className="text-green-800 text-sm font-medium">{story.impact}</p>
+                      <h4 className="font-semibold text-green-900 mb-2">
+                        Impact:
+                      </h4>
+                      <p className="text-green-800 text-sm font-medium">
+                        {story.impact}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -184,16 +221,25 @@ export default function IndustryExpertise() {
               Ready to Find Experts For Your Sector?
             </h2>
             <p className="text-xl max-w-3xl mx-auto mb-8">
-              Let our industry specialists help you identify and attract the right talent for your specific domain needs.
+              Let our industry specialists help you identify and attract the
+              right talent for your specific domain needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/get-quote">
-                <Button size="lg" variant="secondary" className="bg-white text-blue-900 hover:bg-gray-100">
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="bg-white text-blue-900 hover:bg-gray-100"
+                >
                   Get Industry-Specific Quote
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-900">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white text-white hover:bg-white hover:text-blue-900"
+                >
                   Discuss Your Requirements
                 </Button>
               </Link>
@@ -203,47 +249,88 @@ export default function IndustryExpertise() {
       </section>
 
       {/* Footer */}
-       <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
-
             {/* Quick Links */}
             <div className="animate-on-scroll">
               <h4 className="text-xl font-bold mb-6 text-white">Quick Links</h4>
               <nav className="space-y-3">
-                <Link to="/" className="block text-gray-300 hover:text-orange-400 transition-colors text-sm">Home</Link>
-                <Link to="/about" className="block text-gray-300 hover:text-orange-400 transition-colors text-sm">Company Profile</Link>
-                <Link to="/about" className="block text-gray-300 hover:text-orange-400 transition-colors text-sm">Life @ Intelligate</Link>
-                <Link to="/" className="block text-gray-300 hover:text-orange-400 transition-colors text-sm">Disclaimer</Link>
+                <Link
+                  to="/"
+                  className="block text-gray-300 hover:text-orange-400 transition-colors text-sm"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/about"
+                  className="block text-gray-300 hover:text-orange-400 transition-colors text-sm"
+                >
+                  Company Profile
+                </Link>
+                <Link
+                  to="/about"
+                  className="block text-gray-300 hover:text-orange-400 transition-colors text-sm"
+                >
+                  Life @ Intelligate
+                </Link>
+                <Link
+                  to="/"
+                  className="block text-gray-300 hover:text-orange-400 transition-colors text-sm"
+                >
+                  Disclaimer
+                </Link>
                 {/* <Link to="#" className="block text-gray-300 hover:text-orange-400 transition-colors text-sm">Site Map</Link> */}
               </nav>
             </div>
 
             {/* Enquiry Details */}
             <div className="animate-on-scroll">
-              <h4 className="text-xl font-bold mb-6 text-white">Enquiry details</h4>
+              <h4 className="text-xl font-bold mb-6 text-white">
+                Enquiry details
+              </h4>
               <div className="space-y-3 text-sm">
                 <div>
-                  <span className="text-orange-400 font-semibold">Corporate enquiry:</span>
-                  <a href="mailto:admin@intelligatesolution.com" className="block text-gray-300 hover:text-white transition-colors">
-                   admin@intelligatesolution.com
-                  </a>
-                </div>
-                <div>
-                  <span className="text-orange-400 font-semibold">Corporate communication:</span>
-                  <a href="mailto:akhil.kaushik@intelligatesolution.com" className="block text-gray-300 hover:text-white transition-colors">
-                    akhil.kaushik@intelligatesolution.com
-                  </a>
-                </div>
-                <div>
-                  <span className="text-orange-400 font-semibold">Join Us:</span>
-                  <a href="mailto:admin@intelligatesolution.com" className="block text-gray-300 hover:text-white transition-colors">
+                  <span className="text-orange-400 font-semibold">
+                    Corporate enquiry:
+                  </span>
+                  <a
+                    href="mailto:admin@intelligatesolution.com"
+                    className="block text-gray-300 hover:text-white transition-colors"
+                  >
                     admin@intelligatesolution.com
                   </a>
                 </div>
                 <div>
-                  <span className="text-orange-400 font-semibold">Opportunity with premium clients:</span>
-                  <a href="mailto:akhil.kaushik@intelligatesolution.com" className="block text-gray-300 hover:text-white transition-colors">
+                  <span className="text-orange-400 font-semibold">
+                    Corporate communication:
+                  </span>
+                  <a
+                    href="mailto:akhil.kaushik@intelligatesolution.com"
+                    className="block text-gray-300 hover:text-white transition-colors"
+                  >
+                    akhil.kaushik@intelligatesolution.com
+                  </a>
+                </div>
+                <div>
+                  <span className="text-orange-400 font-semibold">
+                    Join Us:
+                  </span>
+                  <a
+                    href="mailto:admin@intelligatesolution.com"
+                    className="block text-gray-300 hover:text-white transition-colors"
+                  >
+                    admin@intelligatesolution.com
+                  </a>
+                </div>
+                <div>
+                  <span className="text-orange-400 font-semibold">
+                    Opportunity with premium clients:
+                  </span>
+                  <a
+                    href="mailto:akhil.kaushik@intelligatesolution.com"
+                    className="block text-gray-300 hover:text-white transition-colors"
+                  >
                     akhil.kaushik@intelligatesolution.com
                   </a>
                 </div>
@@ -255,19 +342,29 @@ export default function IndustryExpertise() {
               <h4 className="text-xl font-bold mb-6 text-white">Contact us</h4>
               <div className="space-y-4 text-sm">
                 <div>
-                  <span className="text-orange-400 font-semibold block mb-1">Contact no:</span>
-                  <a href="tel:+917042923666" className="text-gray-300 hover:text-white transition-colors">+91 9650923366/
-+91 9971019767</a>
+                  <span className="text-orange-400 font-semibold block mb-1">
+                    Contact no:
+                  </span>
+                  <a
+                    href="tel:+917042923666"
+                    className="text-gray-300 hover:text-white transition-colors"
+                  >
+                    +91 9650923366/ +91 9971019767
+                  </a>
                 </div>
                 <div>
-                  <span className="text-orange-400 font-semibold block mb-1">Address:</span>
-                   <div>
+                  <span className="text-orange-400 font-semibold block mb-1">
+                    Address:
+                  </span>
+                  <div>
                     <p className="font-medium">Noida Office :</p>
-                    <p className="text-sm">   D-80, Sector 2</p>
+                    <p className="text-sm"> D-80, Sector 2</p>
                   </div>
                   <div>
                     <p className="font-medium">Rohtak Office :</p>
-                    <p className="text-sm">155/29 Ram Gopal Colony, Delhi Road</p>
+                    <p className="text-sm">
+                      155/29 Ram Gopal Colony, Delhi Road
+                    </p>
                   </div>
                 </div>
                 <div className="flex space-x-4 mt-6">
@@ -277,8 +374,16 @@ export default function IndustryExpertise() {
                     rel="noopener noreferrer"
                     className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors"
                   >
-                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M20 10C20 4.477 15.523 0 10 0S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" clipRule="evenodd" />
+                    <svg
+                      className="w-5 h-5 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M20 10C20 4.477 15.523 0 10 0S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </a>
                   {/* <a
@@ -297,8 +402,16 @@ export default function IndustryExpertise() {
                     rel="noopener noreferrer"
                     className="w-10 h-10 bg-blue-700 hover:bg-blue-800 rounded-full flex items-center justify-center transition-colors"
                   >
-                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clipRule="evenodd" />
+                    <svg
+                      className="w-5 h-5 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </a>
                   <a
@@ -328,12 +441,29 @@ export default function IndustryExpertise() {
           <div className="border-t border-gray-700 pt-6">
             <div className="flex flex-col md:flex-row justify-between items-center text-sm">
               <div className="mb-4 md:mb-0">
-                <p className="text-gray-400">© Intelligate HR 2024 | All Rights Reserved</p>
+                <p className="text-gray-400">
+                  © Intelligate HR 2024 | All Rights Reserved
+                </p>
               </div>
               <div className="flex space-x-6">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Terms & Conditions</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Contact</a>
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Terms & Conditions
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Privacy Policy
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Contact
+                </a>
               </div>
             </div>
           </div>
@@ -341,9 +471,9 @@ export default function IndustryExpertise() {
       </footer>
 
       {/* WhatsApp Floating Button */}
-      <a 
-        href="https://wa.me/919971019767" 
-        target="_blank" 
+      <a
+        href="https://wa.me/919971019767"
+        target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-colors z-50 animate-bounce"
       >
