@@ -169,19 +169,31 @@ console.log("🎯 Filtered jobs:", filteredJobs);
               <span className="text-gray-700 font-medium">Filter by Industry:</span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {industries.map((industry) => (
+              <Button
+                variant={selectedFilter === 'All' ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedFilter('All')}
+                className={`${
+                  selectedFilter === 'All'
+                    ? "bg-blue-900 text-white"
+                    : "text-gray-600 hover:text-blue-900"
+                }`}
+              >
+                All
+              </Button>
+              {categories.filter(cat => cat.isActive).map((category) => (
                 <Button
-                  key={industry}
-                  variant={selectedFilter === industry ? "default" : "outline"}
+                  key={category._id}
+                  variant={selectedFilter === category.name ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedFilter(industry)}
+                  onClick={() => setSelectedFilter(category.name)}
                   className={`${
-                    selectedFilter === industry 
-                      ? "bg-blue-900 text-white" 
+                    selectedFilter === category.name
+                      ? "bg-blue-900 text-white"
                       : "text-gray-600 hover:text-blue-900"
                   }`}
                 >
-                  {industry}
+                  {category.name}
                 </Button>
               ))}
             </div>
