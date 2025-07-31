@@ -47,6 +47,7 @@ interface Job {
 
 export default function Openings() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [jobOpenings, setJobOpenings] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
