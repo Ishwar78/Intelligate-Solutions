@@ -15,6 +15,15 @@ async function connectToMongoDB() {
   return client.db(DB_NAME);
 }
 
+// Email configuration
+const transporter = nodemailer.createTransporter({
+  service: 'gmail',
+  auth: {
+    user: 'sharmaishwar970@gmail.com',
+    pass: 'winfpjblpaxlnwlc'
+  }
+});
+
 // Get all job openings
 export const getJobOpenings: RequestHandler = async (req, res) => {
   try {
