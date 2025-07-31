@@ -24,12 +24,12 @@ import {
   Filter,
   Upload
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ApplicationModal from "@/components/ApplicationModal";
 import ResumeSubmitModal from "@/components/ResumeSubmitModal";
 import HeroSlider from "@/components/HeroSlider";
-import ServiceDropdown from "@/components/ServiceDropdown";
+import Header from "@/components/Header";
 
 interface Job {
   _id: string;
