@@ -66,6 +66,14 @@ interface JobFormData {
   skills: string;
 }
 
+interface Category {
+  _id: string;
+  name: string;
+  description: string;
+  isActive: boolean;
+  createdAt: Date;
+}
+
 export default function AdminDashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
