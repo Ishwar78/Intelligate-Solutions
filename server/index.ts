@@ -51,5 +51,10 @@ export function createServer() {
   // Admin Authentication
   app.post("/api/admin/login", adminLogin);
 
+  // Category Management Routes
+  app.get("/api/categories", getCategories);
+  app.post("/api/categories", verifyAdmin, createCategory);
+  app.delete("/api/categories/:id", verifyAdmin, deleteCategory);
+
   return app;
 }
