@@ -11,7 +11,10 @@ import {
   submitApplication,
   getApplications,
   adminLogin,
-  verifyAdmin
+  verifyAdmin,
+  getCategories,
+  createCategory,
+  deleteCategory,
 } from "./routes/jobs";
 import { sendContactEmail } from "./routes/email";
 
@@ -20,8 +23,8 @@ export function createServer() {
 
   // Middleware
   app.use(cors());
-  app.use(express.json({ limit: '10mb' })); // Increase limit for file uploads
-  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  app.use(express.json({ limit: "10mb" })); // Increase limit for file uploads
+  app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
   // Example API routes
   app.get("/api/ping", (_req, res) => {
@@ -47,6 +50,11 @@ export function createServer() {
 
   // Admin Authentication
   app.post("/api/admin/login", adminLogin);
+
+  // Category Management Routes
+  app.get("/api/categories", getCategories);
+  app.post("/api/categories", verifyAdmin, createCategory);
+  app.delete("/api/categories/:id", verifyAdmin, deleteCategory);
 
   return app;
 }
