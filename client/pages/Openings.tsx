@@ -61,17 +61,26 @@ const filteredJobs = selectedFilter === 'All'
       job.industry?.trim().toLowerCase() === selectedFilter.trim().toLowerCase()
     );
 
-  // Fetch jobs from MongoDB
+  // Fetch jobs and categories from MongoDB
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/jobs');
-        if (response.ok) {
-          const jobs = await response.json();
+
+        // Fetch jobs
+        const jobsResponse = await fetch('/api/jobs');
+        if (jobsResponse.ok) {
+          const jobs = await jobsResponse.json();
           setJobOpenings(jobs);
         } else {
           setError('Failed to load job openings');
+        }
+
+        // Fetch categories
+        const categoriesResponse = await fetch('/api/categories');
+        if (categoriesResponse.ok) {
+          const categoriesData = await categoriesResponse.json();
+          setCategories(categoriesData);
         }
       } catch (err) {
         setError('Network error. Please try again later.');
@@ -80,7 +89,7 @@ const filteredJobs = selectedFilter === 'All'
       }
     };
 
-    fetchJobs();
+    fetchData();
   }, []);
 
   const handleApplyNow = (job: Job) => {
