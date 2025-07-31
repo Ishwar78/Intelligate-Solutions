@@ -25,8 +25,6 @@ import HeroSlider from "@/components/HeroSlider";
 import Header from "@/components/Header";
 
 export default function IndustryExpertise() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const location = useLocation();
 
   const industries = [
     { name: "ITES & BPO", icon: Cpu, color: "blue" },
